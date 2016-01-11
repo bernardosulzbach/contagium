@@ -1,4 +1,10 @@
-archive
-node_modules
+archive/
 
-.idea
+# Node packages
+node_modules/
+
+# WebStorm
+.idea/
+
+# Gulp output
+dist/
