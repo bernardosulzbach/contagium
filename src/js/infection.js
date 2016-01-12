@@ -3,6 +3,9 @@
 function colorBasedOnState(tile) {
     var normalizedValue = Math.floor(tile.density * 255);
     var intensity = (normalizedValue).toString(16);
+    if (intensity.length < 2) {
+        intensity = '0' + intensity;
+    }
     if (tile.infected) {
         return '#00' + intensity + '00';
     } else {
@@ -11,8 +14,23 @@ function colorBasedOnState(tile) {
 }
 
 var game = {};
+game.infection = {
+    // Used to determine how likely the infection is to spreading.
+    contagion_multiplier: 0.4,
+    // How much of the infected population survives per tick.
+    survival_multiplier: 0.8,
+    // The minimum population density required for a tile to continue active
+    minimum_population_density: 0.4
+};
+
+function getRandomBetween(minimum, maximum) {
+    var delta = maximum - minimum;
+    return minimum + delta * Math.random();
+}
 
 function setUp() {
+    var minimum_tile_population_density = 0.2;
+    var maximum_tile_population_density = 0.8;
     game.running = false;
     game.map = {};
     game.map.tiles = [];
@@ -33,7 +51,11 @@ function setUp() {
     for (var y = 0; y <= canvasSide - squareSide; y += squareSide) {
         var tileRow = [];
         for (var x = 0; x <= canvasSide - squareSide; x += squareSide) {
-            var tile = {'density': Math.random() * 0.5, 'infected': false};
+            var tile = {
+                'density': getRandomBetween(minimum_tile_population_density, maximum_tile_population_density),
+                'infected': false
+            };
+
             tileRow.push(tile);
         }
         game.map.tiles.push(tileRow);
@@ -66,7 +88,18 @@ function translateToTilePosition(canvas, position, tilesPerRow) {
 }
 
 game.renderTick = function () {
-    game.map.tiles[0][0].density = Math.random();
+    for (var y = 0; y < game.tilesPerRow; y++) {
+        for (var x = 0; x < game.tilesPerRow; x++) {
+            var tile = game.map.tiles[y][x];
+            if (tile.infected) {
+                if (tile.density < game.infection.minimum_population_density) {
+                    tile.density = 0;
+                } else {
+                    tile.density *= 0.8;
+                }
+            }
+        }
+    }
 };
 
 game.updateCanvas = function () {
