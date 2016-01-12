@@ -4,7 +4,7 @@ function colorBasedOnValue(value) {
     return '#' + redHexadecimal + '0000';
 }
 
-window.onload = function () {
+function setUp() {
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     var width = canvas.width;
@@ -19,7 +19,6 @@ window.onload = function () {
     }
     var canvasSide = width;
     var squareSide = width / squaresInRow;
-    var tiles = [];
     for (var y = 0; y <= canvasSide - squareSide; y += squareSide) {
         var tileRow = [];
         for (var x = 0; x <= canvasSide - squareSide; x += squareSide) {
@@ -30,4 +29,14 @@ window.onload = function () {
         }
         tiles.push(tileRow);
     }
-};
+}
+
+(function () {
+    setUp();
+    var tickLength = 200; // 200 milliseconds.
+    function main(timeFrame) {
+        window.requestAnimationFrame(main);
+    }
+
+    main();
+})();
