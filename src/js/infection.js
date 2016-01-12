@@ -91,6 +91,7 @@ function setUp() {
 }
 
 game.renderTick = function () {
+    var tilesInfectedOnTick = [];
     for (var y = 0; y < game.tilesPerRow; y++) {
         for (var x = 0; x < game.tilesPerRow; x++) {
             var tile = game.map.tiles[y][x];
@@ -103,7 +104,7 @@ game.renderTick = function () {
                             var adjacentTile = game.map.tiles[neighbor[1]][neighbor[0]];
                             if (!adjacentTile.infected) {
                                 if (Math.random() < game.infection.contagionMultiplier * tile.density) {
-                                    adjacentTile.infected = true;
+                                    tilesInfectedOnTick.push(adjacentTile);
                                 }
                             }
                         }
@@ -116,6 +117,9 @@ game.renderTick = function () {
                 }
             }
         }
+    }
+    for (var j = 0; j < tilesInfectedOnTick.length; j++) {
+        tilesInfectedOnTick[j].infected = true;
     }
 };
 
