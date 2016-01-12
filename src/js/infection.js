@@ -8,7 +8,10 @@ function colorBasedOnState(tile) {
     }
 }
 
-var Map = {tiles: []};
+var game = {};
+game.running = false;
+game.map = {};
+game.map.tiles = [];
 
 function setUp() {
     var canvas = document.getElementById('canvas');
@@ -33,8 +36,25 @@ function setUp() {
             context.fillStyle = colorBasedOnState(tile);
             context.fillRect(x, y, squareSide, squareSide);
         }
-        Map.tiles.push(tileRow);
+        game.map.tiles.push(tileRow);
     }
+
+    canvas.addEventListener('click', function (e) {
+        if (!game.running) {
+            var pos = getMousePos(canvas, e);
+            var x = pos.x;
+            var y = pos.y;
+            console.log('Got a mouse click at (' + x + ', ' + y + ')');
+        }
+    }, false);
+}
+
+function getMousePos(canvas, event) {
+    var rectangle = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rectangle.left,
+        y: event.clientY - rectangle.top
+    };
 }
 
 (function () {
