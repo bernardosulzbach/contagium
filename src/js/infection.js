@@ -9,25 +9,25 @@ function colorBasedOnState(tile) {
 }
 
 var game = {};
-game.running = false;
-game.map = {};
-game.map.tiles = [];
 
 function setUp() {
+    game.running = false;
+    game.map = {};
+    game.map.tiles = [];
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     var width = canvas.width;
     var height = canvas.height;
-    var squaresInRow = 20;
+    var tilesPerRow = game.tilesPerRow = 20;
     context.fillRect(0, 0, width, height);
     if (width !== height || width < 0) {
         throw Error('Expected a square canvas.');
     }
-    if (width % squaresInRow !== 0) {
+    if (width % tilesPerRow !== 0) {
         throw Error('Expected the side of the canvas to be a multiple of 20.');
     }
     var canvasSide = width;
-    var squareSide = width / squaresInRow;
+    var squareSide = width / tilesPerRow;
     for (var y = 0; y <= canvasSide - squareSide; y += squareSide) {
         var tileRow = [];
         for (var x = 0; x <= canvasSide - squareSide; x += squareSide) {
@@ -39,22 +39,29 @@ function setUp() {
         game.map.tiles.push(tileRow);
     }
 
-    canvas.addEventListener('click', function (e) {
+    canvas.addEventListener('click', function (event) {
         if (!game.running) {
-            var pos = getMousePos(canvas, e);
-            var x = pos.x;
-            var y = pos.y;
-            console.log('Got a mouse click at (' + x + ', ' + y + ')');
+            var mousePosition = getMousePosition(canvas, event);
+            var tilePosition = translateToTilePosition(canvas, mousePosition, tilesPerRow);
+            var x = mousePosition.x;
+            var y = mousePosition.y;
+            console.log('Got a mouse click at (' + x + ', ' + y + '). Tile is (' + tilePosition.x + ', ' + tilePosition.y + ')');
         }
     }, false);
 }
 
-function getMousePos(canvas, event) {
+function getMousePosition(canvas, event) {
     var rectangle = canvas.getBoundingClientRect();
     return {
         x: event.clientX - rectangle.left,
         y: event.clientY - rectangle.top
     };
+}
+
+function translateToTilePosition(canvas, position, tilesPerRow) {
+    var tileWidth = canvas.width / tilesPerRow;
+    var tileHeight = canvas.height / tilesPerRow;
+    return {x: Math.floor(position.x / tileWidth), y: Math.floor(position.y / tileHeight)};
 }
 
 (function () {
