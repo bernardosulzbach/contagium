@@ -38,7 +38,6 @@ var expectedFilesInDistDir = [
         'doc/usage.md',
 
     'favicon.ico',
-    'humans.txt',
 
     'img/',
         'img/.gitignore',
