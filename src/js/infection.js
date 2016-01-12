@@ -16,7 +16,7 @@ function colorBasedOnState(tile) {
 var game = {};
 game.infection = {
     // Used to determine how likely the infection is to spreading.
-    contagion_multiplier: 0.4,
+    contagion_multiplier: 0.6,
     // How much of the infected population survives per tick.
     survival_multiplier: 0.8,
     // The minimum population density required for a tile to continue active
