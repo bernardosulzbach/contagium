@@ -91,7 +91,21 @@ game.renderTick = function () {
     for (var y = 0; y < game.tilesPerRow; y++) {
         for (var x = 0; x < game.tilesPerRow; x++) {
             var tile = game.map.tiles[y][x];
-            if (tile.infected) {
+            if (tile.infected && tile.density != 0) {
+                var neighbors = [[x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y]];
+                for (var i = 0; i < neighbors.length; i++) {
+                    var neighbor = neighbors[i];
+                    if (0 <= neighbor[0] && neighbor[0] <= game.tilesPerRow) {
+                        if (0 <= neighbor[1] && neighbor[1] <= game.tilesPerRow) {
+                            var adjacentTile = game.map.tiles[neighbor[1]][neighbor[0]];
+                            if (!adjacentTile.infected) {
+                                if (Math.random() < game.infection.contagion_multiplier * tile.density) {
+                                    adjacentTile.infected = true;
+                                }
+                            }
+                        }
+                    }
+                }
                 if (tile.density < game.infection.minimum_population_density) {
                     tile.density = 0;
                 } else {
