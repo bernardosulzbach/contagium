@@ -1,8 +1,14 @@
-function colorBasedOnValue(value) {
-    var normalizedValue = Math.floor(value * 255);
-    var redHexadecimal = (normalizedValue).toString(16);
-    return '#' + redHexadecimal + '0000';
+function colorBasedOnState(tile) {
+    var normalizedValue = Math.floor(tile.density * 255);
+    var intensity = (normalizedValue).toString(16);
+    if (tile.infected) {
+        return '#00' + intensity + '00';
+    } else {
+        return '#' + intensity + '0000';
+    }
 }
+
+var Map = {tiles: []};
 
 function setUp() {
     var canvas = document.getElementById('canvas');
@@ -22,12 +28,12 @@ function setUp() {
     for (var y = 0; y <= canvasSide - squareSide; y += squareSide) {
         var tileRow = [];
         for (var x = 0; x <= canvasSide - squareSide; x += squareSide) {
-            var tileValue = Math.random() * 0.5;
-            tileRow.push(tileValue);
-            context.fillStyle = colorBasedOnValue(tileValue);
+            var tile = {'density': Math.random() * 0.5, 'infected': false};
+            tileRow.push(tile);
+            context.fillStyle = colorBasedOnState(tile);
             context.fillRect(x, y, squareSide, squareSide);
         }
-        tiles.push(tileRow);
+        Map.tiles.push(tileRow);
     }
 }
 
