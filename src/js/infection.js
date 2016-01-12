@@ -95,8 +95,8 @@ game.renderTick = function () {
                 var neighbors = [[x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y]];
                 for (var i = 0; i < neighbors.length; i++) {
                     var neighbor = neighbors[i];
-                    if (0 <= neighbor[0] && neighbor[0] <= game.tilesPerRow) {
-                        if (0 <= neighbor[1] && neighbor[1] <= game.tilesPerRow) {
+                    if (0 <= neighbor[0] && neighbor[0] < game.tilesPerRow) {
+                        if (0 <= neighbor[1] && neighbor[1] < game.tilesPerRow) {
                             var adjacentTile = game.map.tiles[neighbor[1]][neighbor[0]];
                             if (!adjacentTile.infected) {
                                 if (Math.random() < game.infection.contagion_multiplier * tile.density) {
