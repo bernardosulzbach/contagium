@@ -30,7 +30,8 @@
     }
   },
   "license": {
-    "type": "MIT"
+    "type": "MIT",
+    "url": "https://raw.githubusercontent.com/mafagafogigante/infection/master/LICENSE.txt"
   },
   "name": "infection",
   "private": true,
