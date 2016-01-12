@@ -1,3 +1,5 @@
+// The logic behind the magic. It is very unoptimized as it is a work in progress and there is a lot of experimentation.
+
 function colorBasedOnState(tile) {
     var normalizedValue = Math.floor(tile.density * 255);
     var intensity = (normalizedValue).toString(16);
@@ -33,19 +35,18 @@ function setUp() {
         for (var x = 0; x <= canvasSide - squareSide; x += squareSide) {
             var tile = {'density': Math.random() * 0.5, 'infected': false};
             tileRow.push(tile);
-            context.fillStyle = colorBasedOnState(tile);
-            context.fillRect(x, y, squareSide, squareSide);
         }
         game.map.tiles.push(tileRow);
     }
+    game.canvas = canvas;
+    game.updateCanvas();
 
     canvas.addEventListener('click', function (event) {
         if (!game.running) {
             var mousePosition = getMousePosition(canvas, event);
             var tilePosition = translateToTilePosition(canvas, mousePosition, tilesPerRow);
-            var x = mousePosition.x;
-            var y = mousePosition.y;
-            console.log('Got a mouse click at (' + x + ', ' + y + '). Tile is (' + tilePosition.x + ', ' + tilePosition.y + ')');
+            game.map.tiles[tilePosition.y][tilePosition.x].infected = true;
+            game.running = true;
         }
     }, false);
 }
@@ -64,11 +65,34 @@ function translateToTilePosition(canvas, position, tilesPerRow) {
     return {x: Math.floor(position.x / tileWidth), y: Math.floor(position.y / tileHeight)};
 }
 
+game.renderTick = function () {
+    game.map.tiles[0][0].density = Math.random();
+};
+
+game.updateCanvas = function () {
+    var squareSide = game.canvas.width / game.tilesPerRow;
+    var context = game.canvas.getContext("2d");
+    for (var y = 0; y < game.tilesPerRow; y++) {
+        for (var x = 0; x < game.tilesPerRow; x++) {
+            context.fillStyle = colorBasedOnState(game.map.tiles[y][x]);
+            context.fillRect(x * squareSide, y * squareSide, squareSide, squareSide);
+        }
+    }
+};
+
 (function () {
     setUp();
     var tickLength = 200; // 200 milliseconds.
+    game.lastTickTimeFrame = window.performance.now();
     function main(timeFrame) {
-        window.requestAnimationFrame(main);
+        window.requestAnimationFrame(main); // A DOMHighResTimeStamp will be provided to the callback
+        if (game.running) {
+            if (game.lastTickTimeFrame + tickLength < timeFrame) {
+                game.renderTick();
+                game.updateCanvas();
+                game.lastTickTimeFrame = timeFrame;
+            }
+        }
     }
 
     main();
