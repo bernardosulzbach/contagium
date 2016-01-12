@@ -16,11 +16,13 @@ function colorBasedOnState(tile) {
 var game = {};
 game.infection = {
     // Used to determine how likely the infection is to spreading.
-    contagion_multiplier: 0.6,
+    contagionMultiplier: 0.6,
     // How much of the infected population survives per tick.
-    survival_multiplier: 0.8,
+    survivalMultiplier: 0.8,
     // The minimum population density required for a tile to continue active
-    minimum_population_density: 0.4
+    minimumPopulationDensity: 0.4,
+    minimumInitialPopulationDensity: 0.2,
+    maximumInitialPopulationDensity: 0.8
 };
 
 function getRandomBetween(minimum, maximum) {
@@ -28,9 +30,24 @@ function getRandomBetween(minimum, maximum) {
     return minimum + delta * Math.random();
 }
 
+function getMousePosition(canvas, event) {
+    var rectangle = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rectangle.left,
+        y: event.clientY - rectangle.top
+    };
+}
+
+function translateToTilePosition(canvas, position, tilesPerRow) {
+    var tileWidth = canvas.width / tilesPerRow;
+    var tileHeight = canvas.height / tilesPerRow;
+    return {
+        x: Math.floor(position.x / tileWidth),
+        y: Math.floor(position.y / tileHeight)
+    };
+}
+
 function setUp() {
-    var minimum_tile_population_density = 0.2;
-    var maximum_tile_population_density = 0.8;
     game.running = false;
     game.map = {};
     game.map.tiles = [];
@@ -52,7 +69,7 @@ function setUp() {
         var tileRow = [];
         for (var x = 0; x <= canvasSide - squareSide; x += squareSide) {
             var tile = {
-                'density': getRandomBetween(minimum_tile_population_density, maximum_tile_population_density),
+                'density': getRandomBetween(game.infection.minimumInitialPopulationDensity, game.infection.maximumInitialPopulationDensity),
                 'infected': false
             };
 
@@ -73,25 +90,11 @@ function setUp() {
     }, false);
 }
 
-function getMousePosition(canvas, event) {
-    var rectangle = canvas.getBoundingClientRect();
-    return {
-        x: event.clientX - rectangle.left,
-        y: event.clientY - rectangle.top
-    };
-}
-
-function translateToTilePosition(canvas, position, tilesPerRow) {
-    var tileWidth = canvas.width / tilesPerRow;
-    var tileHeight = canvas.height / tilesPerRow;
-    return {x: Math.floor(position.x / tileWidth), y: Math.floor(position.y / tileHeight)};
-}
-
 game.renderTick = function () {
     for (var y = 0; y < game.tilesPerRow; y++) {
         for (var x = 0; x < game.tilesPerRow; x++) {
             var tile = game.map.tiles[y][x];
-            if (tile.infected && tile.density != 0) {
+            if (tile.infected && tile.density !== 0) {
                 var neighbors = [[x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y]];
                 for (var i = 0; i < neighbors.length; i++) {
                     var neighbor = neighbors[i];
@@ -99,14 +102,14 @@ game.renderTick = function () {
                         if (0 <= neighbor[1] && neighbor[1] < game.tilesPerRow) {
                             var adjacentTile = game.map.tiles[neighbor[1]][neighbor[0]];
                             if (!adjacentTile.infected) {
-                                if (Math.random() < game.infection.contagion_multiplier * tile.density) {
+                                if (Math.random() < game.infection.contagionMultiplier * tile.density) {
                                     adjacentTile.infected = true;
                                 }
                             }
                         }
                     }
                 }
-                if (tile.density < game.infection.minimum_population_density) {
+                if (tile.density < game.infection.minimumPopulationDensity) {
                     tile.density = 0;
                 } else {
                     tile.density *= 0.8;
@@ -118,7 +121,7 @@ game.renderTick = function () {
 
 game.updateCanvas = function () {
     var squareSide = game.canvas.width / game.tilesPerRow;
-    var context = game.canvas.getContext("2d");
+    var context = game.canvas.getContext('2d');
     for (var y = 0; y < game.tilesPerRow; y++) {
         for (var x = 0; x < game.tilesPerRow; x++) {
             context.fillStyle = colorBasedOnState(game.map.tiles[y][x]);
