@@ -9,7 +9,7 @@
    ========================================================================== */
 
 html {
-    background: #400;
+    background: #EEE;
     color: #100;
     font-size: 1.4em;
 }
@@ -94,6 +94,9 @@ textarea {
     max-width: 500px;
     min-height: 100vh;
     background: #EEE;
+    -webkit-box-shadow: 0 0 20px #A00;
+    -moz-box-shadow: 0 0 20px #A00;
+    box-shadow: 0 0 20px #A00;
 }
 
 /* ==========================================================================
