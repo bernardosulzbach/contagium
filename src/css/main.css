@@ -9,9 +9,9 @@
    ========================================================================== */
 
 html {
-    color: #222;
-    font-size: 1em;
-    line-height: 1.4;
+    background: #400;
+    color: #100;
+    font-size: 1.4em;
 }
 
 /*
@@ -88,21 +88,13 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#wrapper {
+    margin: auto;
+    padding: 10px;
+    max-width: 500px;
+    min-height: 100vh;
+    background: #EEE;
+}
 
 /* ==========================================================================
    Helper classes
