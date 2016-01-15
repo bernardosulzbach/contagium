@@ -11,4 +11,6 @@ favicon.ico           -  ICO  32 bits, 16 pixels to 64 pixels
 
 ## Notes
 
-I used http://www.icoconverter.com/ to make the icon.
+I used http://www.icoconverter.com/ to make the ICO file.
+
+Inkscape was used for the SVG file.
