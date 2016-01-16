@@ -113,7 +113,7 @@ game.renderTick = function () {
                 if (tile.density < game.infection.minimumPopulationDensity) {
                     tile.density = 0;
                 } else {
-                    tile.density *= 0.8;
+                    tile.density *= game.infection.survivalMultiplier;
                 }
             }
         }
