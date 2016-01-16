@@ -52,17 +52,15 @@ function setUp() {
     game.map = {};
     game.map.tiles = [];
     var canvas = document.getElementById('canvas');
+    var side = Math.min(window.innerWidth, window.innerHeight);
+    side = 20 * Math.floor(side / 20);
+    canvas.width = canvas.height = side;
+    canvas.style.marginTop = Math.round((window.innerHeight - side) / 2) + 'px';
     var context = canvas.getContext('2d');
     var width = canvas.width;
     var height = canvas.height;
     var tilesPerRow = game.tilesPerRow = 20;
     context.fillRect(0, 0, width, height);
-    if (width !== height || width < 0) {
-        throw Error('Expected a square canvas.');
-    }
-    if (width % tilesPerRow !== 0) {
-        throw Error('Expected the side of the canvas to be a multiple of 20.');
-    }
     var canvasSide = width;
     var squareSide = width / tilesPerRow;
     for (var y = 0; y <= canvasSide - squareSide; y += squareSide) {
