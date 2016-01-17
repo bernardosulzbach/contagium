@@ -20,8 +20,8 @@ game.infection = {
     // How much of the infected population survives per tick.
     survivalMultiplier: 0.8,
     // The minimum population density required for a tile to continue active
-    minimumPopulationDensity: 0.4,
-    minimumInitialPopulationDensity: 0.2,
+    minimumPopulationDensity: 0.1,
+    minimumInitialPopulationDensity: 0.6,
     maximumInitialPopulationDensity: 0.8
 };
 
