@@ -47,25 +47,35 @@ function translateToTilePosition(canvas, position, tilesPerRow) {
     };
 }
 
+function resize() {
+    var canvas = document.getElementById('canvas');
+    var clientWidth = Math.max(document.documentElement.clientWidth, document.body.scrollWidth, document.documentElement.scrollWidth, document.body.offsetWidth, document.documentElement.offsetWidth);
+    var clientHeight = Math.max(document.documentElement.clientHeight, document.body.scrollHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.documentElement.offsetHeight);
+    var side = Math.min(clientWidth, clientHeight);
+    side = 20 * Math.floor(side / 20);
+    canvas.width = canvas.height = side;
+    canvas.style.position = 'absolute';
+    canvas.style.marginTop = Math.round((clientHeight - side) / 2) + 'px';
+    canvas.style.left = (clientWidth - side) / 2 + 'px';
+}
+
 function setUp() {
     game.running = false;
     game.map = {};
     game.map.tiles = [];
+
+    resize();
+
     var canvas = document.getElementById('canvas');
-    var side = Math.min(window.innerWidth, window.innerHeight);
-    side = 20 * Math.floor(side / 20);
-    canvas.width = canvas.height = side;
-    canvas.style.marginTop = Math.round((window.innerHeight - side) / 2) + 'px';
     var context = canvas.getContext('2d');
-    var width = canvas.width;
-    var height = canvas.height;
+
     var tilesPerRow = game.tilesPerRow = 20;
-    context.fillRect(0, 0, width, height);
-    var canvasSide = width;
-    var squareSide = width / tilesPerRow;
-    for (var y = 0; y <= canvasSide - squareSide; y += squareSide) {
+    var side = canvas.width;
+    context.fillRect(0, 0, side, side);
+    var squareSide = side / tilesPerRow;
+    for (var y = 0; y <= side - squareSide; y += squareSide) {
         var tileRow = [];
-        for (var x = 0; x <= canvasSide - squareSide; x += squareSide) {
+        for (var x = 0; x <= side - squareSide; x += squareSide) {
             var tile = {
                 'density': getRandomBetween(game.infection.minimumInitialPopulationDensity, game.infection.maximumInitialPopulationDensity),
                 'infected': false
