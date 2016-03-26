@@ -1,3 +1,4 @@
+npm install
 gulp
 cp -r dist/* ../contagium.github.io/
 cd ../contagium.github.io
