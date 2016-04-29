@@ -31,9 +31,9 @@
   },
   "license": {
     "type": "MIT",
-    "url": "https://raw.githubusercontent.com/mafagafogigante/infection/master/LICENSE.txt"
+    "url": "https://raw.githubusercontent.com/contagium/contagium/master/LICENSE.txt"
   },
-  "name": "infection",
+  "name": "Contagium",
   "private": true,
   "scripts": {
     "build": "gulp build",
