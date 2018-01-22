@@ -95,9 +95,6 @@ textarea {
     max-width: 500px;
     min-height: 100vh;
     background: #EEE;
-    -webkit-box-shadow: 0 0 20px 5px #A00;
-    -moz-box-shadow: 0 0 20px 5px #A00;
-    box-shadow: 0 0 20px 5px #A00;
 }
 
 /* ==========================================================================
